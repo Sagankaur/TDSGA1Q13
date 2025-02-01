@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS to allow GET requests from any origin
 
 # Load data from q-vercel-python.json
-with open('q-vercel-python.json', 'r') as f:
+with open('api/q-vercel-python.json', 'r') as f: 
     student_marks = json.load(f)
 
 @app.route('/api', methods=['GET'])
