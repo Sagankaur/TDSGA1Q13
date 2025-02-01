@@ -1,23 +1,62 @@
+# import json
+# from flask import Flask, request, jsonify
+# from flask_cors import CORS
+
+# app = Flask(__name__)
+# CORS(app)  # Enable CORS to allow GET requests from any origin
+
+# # Load data from q-vercel-python.json
+# with open('api/q-vercel-python.json', 'r') as f: 
+#     student_marks = json.load(f)
+
+# @app.route('/api', methods=['GET'])
+# def get_marks():
+#     # Get names from query parameters
+#     names = request.args.getlist('name')
+    
+#     # Fetch marks for requested names
+#     marks = [student_marks.get(name, None) for name in names]
+    
+#     return jsonify({"marks": marks})
+
+# if __name__ == "__main__":
+#     app.run()
+
 import json
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from http.server import BaseHTTPRequestHandler
+import urllib.parse
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS to allow GET requests from any origin
+# Load student data from the JSON file
+def load_data():
+    with open('q-vercel-python.json', 'r') as file:
+        data = json.load(file)
+    return data
 
-# Load data from q-vercel-python.json
-with open('api/q-vercel-python.json', 'r') as f: 
-    student_marks = json.load(f)
+# Handler class to process incoming requests
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        # Parse the query parameters
+        query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
 
-@app.route('/api', methods=['GET'])
-def get_marks():
-    # Get names from query parameters
-    names = request.args.getlist('name')
-    
-    # Fetch marks for requested names
-    marks = [student_marks.get(name, None) for name in names]
-    
-    return jsonify({"marks": marks})
+        # Get 'name' parameters from the query string
+        names = query.get('name', [])
 
-if __name__ == "__main__":
-    app.run()
+        # Load data from the JSON file
+        data = load_data()
+
+        # Prepare the result dictionary
+        result = {"marks": []}
+        for name in names:
+            # Find the marks for each name
+            for entry in data:
+                if entry["name"] == name:
+                    result["marks"].append(entry["marks"])
+
+        # Send the response header
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')  # Enable CORS for any origin
+        self.end_headers()
+
+        # Send the JSON response
+        self.wfile.write(json.dumps(result).encode('utf-8'))
