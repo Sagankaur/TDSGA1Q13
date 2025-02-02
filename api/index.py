@@ -14,7 +14,7 @@ app.add_middleware(
 )
 
 # Load the JSON data
-with open('q-python-vercel.json', 'r') as f:
+with open('q-vercel-python.json', 'r') as f:
     students_data = json.load(f)
 
 # Convert the list of dictionaries to a dictionary for faster lookup
