@@ -1,0 +1,19 @@
+name: My GitHub Action
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: 23f2003511@ds.study.iitm.ac.in
+        run: echo "Hello, world!"
