@@ -12,13 +12,14 @@ jobs:
   commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Configure Git (23f2003511@ds.study.iitm.ac.in)
+      - name: Configure Git User
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "23f2003511@ds.study.iitm.ac.in"
+          git config --list  # Debugging: Verify config
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Make a Change
         run: |
@@ -27,10 +28,5 @@ jobs:
       - name: Commit and Push Changes
         run: |
           git add last_run.txt
-          git commit -m "Automated daily commit at $(date)" || echo "No changes to commit"
+          git commit --author="GitHub Action <23f2003511@ds.study.iitm.ac.in>" -m "Automated daily commit at $(date)" || echo "No changes to commit"
           git push
-      - name: Configure Git
-        run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "23f2003511@ds.study.iitm.ac.in"
-          git config --list  # Debugging: Check if the email is set correctly
